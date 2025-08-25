@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: gitea
+      POSTGRES_PASSWORD: gitea
+      POSTGRES_DB: giteadb
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - gitea_db_net
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+
+volumes:
+  pg_data:
+
+networks:
+  gitea_db_net:
+    external: true

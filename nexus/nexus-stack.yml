@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  nexus:
+    image: sonatype/nexus3:latest
+    ports:
+      - "8081:8081"   #  UI
+      - "5000:5000"   #  registry
+    volumes:
+      - nexus_data:/nexus-data
+    networks:
+      - devops_net
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+
+volumes:
+  nexus_data:
+
+networks:
+  devops_net:
+    external: true

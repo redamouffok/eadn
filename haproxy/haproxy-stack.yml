@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  haproxy:
+    image: haproxy:latest
+    configs:
+      - source: haproxy_cfg
+        target: /usr/local/etc/haproxy/haproxy.cfg
+    ports:
+      - "80:80"
+    networks:
+      - devops_net
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+
+networks:
+  devops_net:
+    external: true
+
+configs:
+  haproxy_cfg:
+    file: ./haproxy.cfg

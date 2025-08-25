@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  gitea:
+    image: gitea/gitea:latest
+    environment:
+      USER_UID: 1000
+      USER_GID: 1000
+      DB_TYPE: postgres
+      DB_HOST: postgres:5432
+      DB_NAME: giteadb
+      DB_USER: gitea
+      DB_PASSWD: gitea
+      GITEA__server__ROOT_URL: http://gitea.eadn.dz/
+      GITEA__server__SSH_DOMAIN: gitea.eadn.dz
+      GITEA__server__SSH_PORT: 22
+      GITEA__server__HTTP_PORT: 3000
+    ports:
+      - "3000:3000"
+      - "2222:22"
+    volumes:
+      - gitea_data:/data
+    networks:
+      - gitea_db_net
+      - devops_net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+volumes:
+  gitea_data:
+
+networks:
+  gitea_db_net:
+    external: true
+  devops_net:
+    external: true
