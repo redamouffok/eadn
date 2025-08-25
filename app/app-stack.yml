@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  mywebsite:
+    image: app:1.0
+    networks:
+      - devops_net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+networks:
+  devops_net:
+    external: true
