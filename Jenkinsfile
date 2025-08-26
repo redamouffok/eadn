@@ -2,9 +2,11 @@ pipeline {
     agent any
 
     environment {
-        REGISTRY = "localhost:5000"     // registre local
-        IMAGE_NAME = "app"
-        IMAGE_TAG = "latest"            // tu peux utiliser BUILD_NUMBER si tu veux versionner
+        REGISTRY = "localhost:5000"
+        IMAGE_NAME = "eadn/app"
+        IMAGE_TAG = "1.0"
+        STACK_FILE = "EADN/app/app-stack.yml"
+        SERVICE_NAME = "app_app"
     }
 
     stages {
@@ -15,33 +17,40 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build & Push Image') {
             steps {
-                script {
-                    sh """
-                        docker build -t $REGISTRY/$IMAGE_NAME:$IMAGE_TAG .
-                    """
+                dir('EADN/app/code') {
+                    script {
+                        sh """
+                            # supprimer ancienne image si elle existe
+                            docker rmi app:${IMAGE_TAG} || true
+
+                            # build nouvelle image
+                            docker build -t app:${IMAGE_TAG} .
+
+                            # tag vers le registre
+                            docker tag app:${IMAGE_TAG} ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+
+                            # push au registre
+                            docker push ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+                        """
+                    }
                 }
             }
         }
 
-        stage('Push Image to Registry') {
+        stage('Deploy Stack') {
             steps {
-                script {
-                    sh """
-                        docker push $REGISTRY/$IMAGE_NAME:$IMAGE_TAG
-                    """
-                }
-            }
-        }
+                dir('EADN/app') {
+                    script {
+                        sh """
+                            # supprimer ancien service
+                            docker service rm ${SERVICE_NAME} || true
 
-        stage('Deploy to Swarm') {
-            steps {
-                script {
-                    sh """
-                        docker service update --image $REGISTRY/$IMAGE_NAME:$IMAGE_TAG app_app || \
-                        docker service create --name app_app --publish 8080:80 $REGISTRY/$IMAGE_NAME:$IMAGE_TAG
-                    """
+                            # déployer la stack
+                            docker stack deploy -c ${STACK_FILE} app
+                        """
+                    }
                 }
             }
         }
@@ -49,11 +58,11 @@ pipeline {
 
     post {
         success {
-            echo "✅ Déploiement réussi !"
+            echo "✅ Build & déploiement terminés avec succès"
         }
         failure {
-            echo "❌ Échec du pipeline"
+            echo "❌ Le pipeline a échoué"
         }
     }
 }
-
+        
