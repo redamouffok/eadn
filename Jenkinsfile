@@ -27,16 +27,6 @@ pipeline {
             }
         }
 
-        stage('Push Image to Registry') {
-            steps {
-                script {
-                    sh """
-                        docker push $REGISTRY/$IMAGE_NAME:$IMAGE_TAG
-                    """
-                }
-            }
-        }
-
         stage('Deploy to Swarm') {
             steps {
                 script {
