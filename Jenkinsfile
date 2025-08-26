@@ -2,16 +2,16 @@ pipeline {
     agent any
 
     environment {
-        REGISTRY = "localhost:5000"          // service Docker registry
-        IMAGE_NAME = "eadn/app"
-        IMAGE_TAG = "latest"
+        REGISTRY = "localhost:5000"     // registre local
+        IMAGE_NAME = "app"
+        IMAGE_TAG = "latest"            // tu peux utiliser BUILD_NUMBER si tu veux versionner
     }
 
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'http://git.eadn.dz/reda/swarm.git',
+                    url: 'http://gitea_gitea:3000/reda/swarm.git'
             }
         }
 
@@ -19,9 +19,17 @@ pipeline {
             steps {
                 script {
                     sh """
-                        cd
-                        cd /EADN/app/
                         docker build -t $REGISTRY/$IMAGE_NAME:$IMAGE_TAG .
+                    """
+                }
+            }
+        }
+
+        stage('Push Image to Registry') {
+            steps {
+                script {
+                    sh """
+                        docker push $REGISTRY/$IMAGE_NAME:$IMAGE_TAG
                     """
                 }
             }
@@ -44,7 +52,8 @@ pipeline {
             echo "✅ Déploiement réussi !"
         }
         failure {
-            echo "❌ Échec du pipeline..."
+            echo "❌ Échec du pipeline"
         }
     }
 }
+
