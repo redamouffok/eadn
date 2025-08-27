@@ -15,16 +15,16 @@ services:
       GITEA__server__SSH_DOMAIN: gitea.eadn.dz
       GITEA__server__SSH_PORT: 22
       GITEA__server__HTTP_PORT: 3000
-    ports:
-      - target: 3000
-        published: 3000
-        protocol: tcp
-        mode: host
-      - target: 22
-        published: 2222
-        protocol: tcp
-        mode: host
-    volumes:
+    # ports:
+    #   - target: 3000
+    #     published: 3000
+    #     protocol: tcp
+    #     mode: host
+    #   - target: 22
+    #     published: 2222
+    #     protocol: tcp
+    #     mode: host
+    volumes: 
       - gitea_data:/data
     networks:
       - gitea_db_net
