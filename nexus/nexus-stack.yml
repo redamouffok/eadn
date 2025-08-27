@@ -4,7 +4,7 @@ services:
   nexus:
     image: sonatype/nexus3:latest
     ports:
-      - "8081:8081"   #  UI
+      # - "8081:8081"   #  UI
       - "5000:5000"   #  registry
     volumes:
       - nexus_data:/nexus-data

@@ -42,6 +42,6 @@ volumes:
 
 networks:
   gitea_db_net:
-    external: true
+    external: true #stack auto#
   devops_net:
     external: true
