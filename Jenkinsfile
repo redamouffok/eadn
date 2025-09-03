@@ -11,6 +11,11 @@ pipeline {
         APP_VERSION = "${env.BUILD_NUMBER}"   // version auto avec numéro de build
     }
 
+    triggers {
+        // Déclenche automatiquement via webhook Gitea
+        giteaPush()
+    }
+    
     stages {
         stage('Build Docker image') {
             steps {
