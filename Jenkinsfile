@@ -16,7 +16,7 @@ pipeline {
     }
     
     stages {
-        stage('Build Docker image') {
+        stage('Build Docker image..') {
             steps {
                 sh '''
                     cd app/code
