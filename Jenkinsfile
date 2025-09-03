@@ -5,7 +5,6 @@ pipeline {
         stage('Build Docker image') {
             steps {
                 sh '''
-                    cd
                     cd app/code
                     docker build -t app:latest .
                 '''
