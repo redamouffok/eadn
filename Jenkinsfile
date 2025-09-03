@@ -16,6 +16,7 @@ pipeline {
                 sh '''
                     cd app/code
                     docker tag app:latest localhost:5000/eadn-repo/app:latest
+                    docker login localhost:5000 -u admin -p admin
                     docker push localhost:5000/eadn-repo/app:latest
                 '''
             }
