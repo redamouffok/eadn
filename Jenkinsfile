@@ -11,6 +11,10 @@ pipeline {
         APP_VERSION = "${env.BUILD_NUMBER}"   // version auto avec numéro de build
     }
     
+    triggers {
+        giteaPush()
+    }
+    
     stages {
         stage('Build Docker image') {
             steps {
