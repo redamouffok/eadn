@@ -15,6 +15,7 @@ services:
       GITEA__server__SSH_DOMAIN: gitea.eadn.dz
       GITEA__server__SSH_PORT: 22
       GITEA__server__HTTP_PORT: 3000
+      GITEA__webhook__ALLOWED_HOST_LIST : jenkins, jenkins:8080, localhost:8080, ci.eadn.dz
     ports:
        - target: 3000
          published: 3000

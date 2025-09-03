@@ -1,68 +1,73 @@
 pipeline {
     agent any
-
+    
     environment {
         REGISTRY = "localhost:5000"
-        IMAGE_NAME = "eadn/app"
-        IMAGE_TAG = "1.0"
-        STACK_FILE = "EADN/app/app-stack.yml"
-        SERVICE_NAME = "app_app"
+        IMAGE_NAME = "eadn-repo/app"
+        TAG = "1.0"
+        STACK_NAME = "app"
     }
-
+    
     stages {
-        stage('Checkout') {
+        stage('Cleanup Previous Image') {
             steps {
-                git branch: 'main',
-                    url: 'http://gitea_gitea:3000/reda/swarm.git'
-            }
-        }
-
-        stage('Build & Push Image') {
-            steps {
-                dir('EADN/app/code') {
-                    script {
-                        sh """
-                            # supprimer ancienne image si elle existe
-                            docker rmi app:${IMAGE_TAG} || true
-
-                            # build nouvelle image
-                            docker build -t app:${IMAGE_TAG} .
-
-                            # tag vers le registre
-                            docker tag app:${IMAGE_TAG} ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
-
-                            # push au registre
-                            docker push ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
-                        """
-                    }
+                script {
+                    // Suppression de l'image précédente si elle existe
+                    sh '''
+                        docker rmi app:1.0 || true
+                        docker rmi ${REGISTRY}/${IMAGE_NAME}:${TAG} || true
+                    '''
                 }
             }
         }
-
+        
+        stage('Build Docker Image') {
+            steps {
+                dir('eadn/app/code') {
+                    sh 'docker build -t app:${TAG} .'
+                }
+            }
+        }
+        
+        stage('Tag and Push Image') {
+            steps {
+                script {
+                    sh """
+                        docker tag app:${TAG} ${REGISTRY}/${IMAGE_NAME}:${TAG}
+                        docker push ${REGISTRY}/${IMAGE_NAME}:${TAG}
+                    """
+                }
+            }
+        }
+        
         stage('Deploy Stack') {
             steps {
-                dir('EADN/app') {
+                dir('eadn/app') {
                     script {
-                        sh """
-                            # supprimer ancien service
-                            docker service rm ${SERVICE_NAME} || true
-
-                            # déployer la stack
-                            docker stack deploy -c ${STACK_FILE} app
-                        """
+                        // Suppression du service existant silencieusement
+                        sh 'docker service rm ${STACK_NAME}_app || true'
+                        
+                        // Déploiement de la stack
+                        sh 'docker stack deploy -c app-stack.yml ${STACK_NAME}'
                     }
                 }
             }
         }
     }
-
+    
     post {
         success {
-            echo "✅ Build & déploiement terminés avec succès"
+            echo '✅ Pipeline exécutée avec succès!'
+            echo '📦 Image docker buildée et poussée vers le registry'
+            echo '🚀 Application déployée avec Docker Stack'
         }
         failure {
-            echo "❌ Le pipeline a échoué"
+            echo '❌ Pipeline a échoué'
+            slackSend channel: '#jenkins', message: "Échec du pipeline: ${currentBuild.fullDisplayName}"
+        }
+        always {
+            echo '🧹 Nettoyage des ressources temporaires'
+            cleanWs()
         }
     }
 }
-        
