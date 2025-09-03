@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: app:1.0
+    image: app:latest
     networks:
       - devops_net
     deploy:
