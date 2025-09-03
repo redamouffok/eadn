@@ -9,21 +9,21 @@ services:
       DB_TYPE: postgres
       DB_HOST: postgres:5432
       DB_NAME: giteadb
-      DB_USER: gitea
-      DB_PASSWD: gitea
+      DB_USER: admin  
+      DB_PASSWD: admin
       GITEA__server__ROOT_URL: http://gitea.eadn.dz/
       GITEA__server__SSH_DOMAIN: gitea.eadn.dz
       GITEA__server__SSH_PORT: 22
       GITEA__server__HTTP_PORT: 3000
-    # ports:
-    #   - target: 3000
-    #     published: 3000
-    #     protocol: tcp
-    #     mode: host
-    #   - target: 22
-    #     published: 2222
-    #     protocol: tcp
-    #     mode: host
+    ports:
+       - target: 3000
+         published: 3000
+         protocol: tcp
+         mode: host
+       - target: 22
+         published: 2222
+         protocol: tcp
+         mode: host
     volumes: 
       - gitea_data:/data
     networks:
