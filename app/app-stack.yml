@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: app:latest
+    image: localhost:5000/eadn-repo/app:latest
     networks:
       - devops_net
     deploy:
