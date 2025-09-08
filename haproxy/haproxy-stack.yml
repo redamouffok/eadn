@@ -2,6 +2,9 @@ version: '3.8'
 
 services:
   haproxy:
+    extra_hosts:
+      - "ci.eadn.dz:192.168.33.72"
+      - "git.eadn.dz:192.168.33.72"
     image: haproxy:latest
     configs:
       - source: haproxy_cfg

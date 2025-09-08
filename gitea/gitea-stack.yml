@@ -4,6 +4,7 @@ services:
   gitea:
     extra_hosts:
       - "ci.eadn.dz:192.168.33.72"
+      - "git.eadn.dz:192.168.33.72" 
     image: gitea/gitea:latest
     environment:
       USER_UID: 1000
@@ -17,12 +18,12 @@ services:
       GITEA__server__SSH_DOMAIN: gitea.eadn.dz
       GITEA__server__SSH_PORT: 22
       GITEA__server__HTTP_PORT: 3000
-      GITEA__webhook__ALLOWED_HOST_LIST : jenkins, jenkins:8080, localhost:8080, ci.eadn.dz
+      GITEA__webhook__ALLOWED_HOST_LIST: jenkins, jenkins:8080, localhost:8080, ci.eadn.dz
     ports:
-       - target: 3000
-         published: 3000
-         protocol: tcp
-         mode: host
+       #- target: 3000
+        # published: 3000
+        # protocol: tcp
+         #mode: host
        - target: 22
          published: 2222
          protocol: tcp
