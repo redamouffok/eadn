@@ -14,8 +14,8 @@ services:
       DB_NAME: giteadb
       DB_USER: admin  
       DB_PASSWD: admin
-      GITEA__server__ROOT_URL: http://gitea.eadn.dz/
-      GITEA__server__SSH_DOMAIN: gitea.eadn.dz
+      GITEA__server__ROOT_URL: http://git.eadn.dz/
+      GITEA__server__SSH_DOMAIN: git.eadn.dz
       GITEA__server__SSH_PORT: 22
       GITEA__server__HTTP_PORT: 3000
       GITEA__webhook__ALLOWED_HOST_LIST: jenkins, jenkins:8080, localhost:8080, ci.eadn.dz
