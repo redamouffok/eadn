@@ -3,8 +3,8 @@ version: '3.8'
 services:
   jenkins:
     extra_hosts:
-     - "git.eadn.dz:192.168.33.72"
-     - "ci.eadn.dz:192.168.33.72"
+     - "git.eadn.dz:192.168.33.141"
+     - "ci.eadn.dz:192.168.33.141"
     image: jenkins/jenkins:lts-jdk17
     user: root
     environment:

@@ -3,8 +3,8 @@ version: '3.8'
 services:
   gitea:
     extra_hosts:
-      - "ci.eadn.dz:192.168.33.72"
-      - "git.eadn.dz:192.168.33.72" 
+      - "ci.eadn.dz:192.168.33.141"
+      - "git.eadn.dz:192.168.33.141" 
     image: gitea/gitea:latest
     environment:
       USER_UID: 1000
