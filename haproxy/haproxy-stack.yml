@@ -5,12 +5,27 @@ services:
     extra_hosts:
       - "ci.eadn.dz:192.168.33.141"
       - "git.eadn.dz:192.168.33.141"
+      - "site.eadn.dz:192.168.33.141"
     image: haproxy:latest
     configs:
       - source: haproxy_cfg
         target: /usr/local/etc/haproxy/haproxy.cfg
+    secrets:
+      - site_cert
+      - git_cert
+      - ci_cert
+      # - source: site_cert
+      #   target: /etc/haproxy/certs/site.eadn.dz.pem
+      #   mode: 0400
+      # - source: git_cert
+      #   target: /etc/haproxy/certs/git.eadn.dz.pem
+      #   mode: 0400
+      # - source: ci_cert
+      #   target: /etc/haproxy/certs/ci.eadn.dz.pem
+      #   mode: 0400
     ports:
       - "80:80"
+      - "443:443"
     networks:
       - devops_net
     deploy:
@@ -20,6 +35,7 @@ services:
       restart_policy:
         condition: any
 
+
 networks:
   devops_net:
     external: true
@@ -27,3 +43,13 @@ networks:
 configs:
   haproxy_cfg:
     file: ./haproxy.cfg
+    
+secrets:
+  site_cert:
+    external: true
+  git_cert:
+    external: true
+  ci_cert:
+    external: true
+
+

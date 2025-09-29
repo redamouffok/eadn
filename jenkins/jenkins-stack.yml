@@ -5,7 +5,7 @@ services:
     extra_hosts:
      - "git.eadn.dz:192.168.33.141"
      - "ci.eadn.dz:192.168.33.141"
-    image: jenkins/jenkins:lts-jdk17
+    image: jenkins/jenkins:lts
     user: root
     environment:
       JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
